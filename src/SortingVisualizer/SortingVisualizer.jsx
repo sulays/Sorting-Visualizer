@@ -89,7 +89,6 @@ export default class SortingVisualizer extends React.Component {
                 }, i * 20);
             }
         }
-        console.log(array);
     }
 
     bubbleSort() {
@@ -120,8 +119,35 @@ export default class SortingVisualizer extends React.Component {
     }
 
     heapSort() {
-        let array = sortingAlgorithms.heapSort(this.state.array);
-        this.setState({array});
+        let [animations, sortedArray] = sortingAlgorithms.getHeapSortAnimations(this.state.array);
+        console.log(animations);
+        for(let i = 0; i < animations.length; i++) {
+            const arrayBars = document.getElementsByClassName('array-bar');
+            if(animations[i][0] === "compare1") {
+                const idx1 = animations[i][1];
+                const idx2 = animations[i][2];
+                setTimeout(() => {     
+                    arrayBars[idx1].style.backgroundColor = 'red';
+                    arrayBars[idx2].style.backgroundColor = 'red';
+                }, i * 20);
+            } else if(animations[i][0] === "compare2") {
+                const idx1 = animations[i][1];
+                const idx2 = animations[i][2];
+                setTimeout(() => {     
+                    arrayBars[idx1].style.backgroundColor = 'turquoise';
+                    arrayBars[idx2].style.backgroundColor = 'turquoise';
+                }, i * 20);
+            } else {
+                const idx1 = animations[i][1];
+                const idx2 = animations[i][2];
+                setTimeout(() => {
+                    let temp = arrayBars[idx1].style.height; 
+                    arrayBars[idx1].style.height = arrayBars[idx2].style.height;
+                    arrayBars[idx2].style.height = temp;
+                }, i * 20);
+            }
+        }
+        console.log(sortedArray);
     }
 
     render() {

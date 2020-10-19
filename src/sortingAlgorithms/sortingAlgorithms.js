@@ -96,8 +96,48 @@ const partitionArray = (array, l, r, animations) => {
     return i;
 }
 
-export const heapSort = (array) => {
-    return array;
+export const getHeapSortAnimations = (array) => {
+    let animations = [];
+    heapSort(array, animations);
+    return [animations, array];
+}
+
+const heapSort = (array, animations) => {
+    let n = array.length;
+    for(let i = n / 2 - 1; i >= 0; i--) {
+        heapify(array, n, i, animations);
+    }
+    for(let i = n - 1; i > 0; i--) {
+        animations.push(["swap", i, 0]);
+        swap(array, i, 0);
+        heapify(array, i, 0, animations);
+    }
+}
+
+const heapify = (array, n, i, animations) => {
+    let largest = i;
+    let l = 2 * i + 1;
+    let r = 2 * i + 2;
+
+    animations.push(["compare1", largest, largest]);
+    if(l < n && array[l] > array[largest]) {
+        animations.push(["compare1", l, l]);
+        largest = l;
+    }
+    if(r < n && array[r] > array[largest]) {
+        animations.push(["compare1", r, r]);
+        largest = r;
+    }
+    if(l < n) animations.push(["compare2", l, l]);
+    if(r < n) animations.push(["compare2", r, r]);
+    if(largest !== i) {
+        animations.push(["swap", largest, i]);
+        swap(array, largest, i);
+        animations.push(["compare2", i, i]);
+        heapify(array, n, largest, animations);
+    } else {
+        animations.push(["compare2", largest, largest]);
+    }
 }
 
 function swap(array, firstIndex, secondIndex) {
